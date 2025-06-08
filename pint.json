@@ -1,0 +1,22 @@
+{
+    "preset": "psr12",
+    "rules": {
+        "group_import": false,
+        "declare_strict_types": true,
+        "fully_qualified_strict_types": true,
+        "no_unused_imports": true,
+        "array_syntax": {
+            "syntax": "short"
+        },
+        "ordered_imports": {
+            "sort_algorithm": "alpha"
+        },
+        "binary_operator_spaces": {
+            "default": "single_space",
+            "operators": {
+                "=": "align_single_space_minimal",
+                "=>": "align_single_space_minimal"           
+            }
+        }
+    }
+}
