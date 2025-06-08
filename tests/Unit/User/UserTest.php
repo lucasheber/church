@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 it('has a name', function () {
     $user = User::factory()->create();
@@ -70,4 +71,20 @@ it('can be soft deleted', function () {
     $user->delete();
 
     expect($user->trashed())->toBeTrue();
+});
+
+it('can be restored after soft delete', function () {
+    $user = User::factory()->create();
+
+    $user->delete();
+    $user->restore();
+
+    expect($user->trashed())->toBeFalse();
+});
+
+it('can hash password on creation', function () {
+    $user = User::factory()->create(['password' => 'plain-text-password']);
+
+    expect($user->password)->not->toBe('plain-text-password');
+    expect(Hash::check('plain-text-password', $user->password))->toBeTrue();
 });
