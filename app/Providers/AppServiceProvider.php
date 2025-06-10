@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
+use App\Models\User;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -21,6 +23,14 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        // Register the Spatie Permission package's gates
+        $this->registerSpatiePermissionGates();
+    }
+
+    private function registerSpatiePermissionGates(): void
+    {
+        Gate::before(function (User $user) {
+            return $user->hasRole('admin');
+        });
     }
 }
