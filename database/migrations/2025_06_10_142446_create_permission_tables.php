@@ -1,20 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class () extends Migration {
     /**
      * Run the migrations.
      */
     public function up(): void
     {
-        $teams = config('permission.teams');
-        $tableNames = config('permission.table_names');
-        $columnNames = config('permission.column_names');
-        $pivotRole = $columnNames['role_pivot_key'] ?? 'role_id';
+        $teams           = config('permission.teams');
+        $tableNames      = config('permission.table_names');
+        $columnNames     = config('permission.column_names');
+        $pivotRole       = $columnNames['role_pivot_key'] ?? 'role_id';
         $pivotPermission = $columnNames['permission_pivot_key'] ?? 'permission_id';
 
         throw_if(empty($tableNames), new Exception('Error: config/permission.php not loaded. Run [php artisan config:clear] and try again.'));
@@ -62,11 +63,15 @@ return new class extends Migration
                 $table->unsignedBigInteger($columnNames['team_foreign_key']);
                 $table->index($columnNames['team_foreign_key'], 'model_has_permissions_team_foreign_key_index');
 
-                $table->primary([$columnNames['team_foreign_key'], $pivotPermission, $columnNames['model_morph_key'], 'model_type'],
-                    'model_has_permissions_permission_model_type_primary');
+                $table->primary(
+                    [$columnNames['team_foreign_key'], $pivotPermission, $columnNames['model_morph_key'], 'model_type'],
+                    'model_has_permissions_permission_model_type_primary'
+                );
             } else {
-                $table->primary([$pivotPermission, $columnNames['model_morph_key'], 'model_type'],
-                    'model_has_permissions_permission_model_type_primary');
+                $table->primary(
+                    [$pivotPermission, $columnNames['model_morph_key'], 'model_type'],
+                    'model_has_permissions_permission_model_type_primary'
+                );
             }
 
         });
@@ -86,11 +91,15 @@ return new class extends Migration
                 $table->unsignedBigInteger($columnNames['team_foreign_key']);
                 $table->index($columnNames['team_foreign_key'], 'model_has_roles_team_foreign_key_index');
 
-                $table->primary([$columnNames['team_foreign_key'], $pivotRole, $columnNames['model_morph_key'], 'model_type'],
-                    'model_has_roles_role_model_type_primary');
+                $table->primary(
+                    [$columnNames['team_foreign_key'], $pivotRole, $columnNames['model_morph_key'], 'model_type'],
+                    'model_has_roles_role_model_type_primary'
+                );
             } else {
-                $table->primary([$pivotRole, $columnNames['model_morph_key'], 'model_type'],
-                    'model_has_roles_role_model_type_primary');
+                $table->primary(
+                    [$pivotRole, $columnNames['model_morph_key'], 'model_type'],
+                    'model_has_roles_role_model_type_primary'
+                );
             }
         });
 
@@ -124,7 +133,7 @@ return new class extends Migration
         $tableNames = config('permission.table_names');
 
         if (empty($tableNames)) {
-            throw new \Exception('Error: config/permission.php not found and defaults could not be merged. Please publish the package configuration before proceeding, or drop the tables manually.');
+            throw new Exception('Error: config/permission.php not found and defaults could not be merged. Please publish the package configuration before proceeding, or drop the tables manually.');
         }
 
         Schema::drop($tableNames['role_has_permissions']);
