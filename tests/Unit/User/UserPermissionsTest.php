@@ -6,7 +6,7 @@ beforeEach(function () {
     // Ensure the Spatie Permission package is set up correctly
     $pastorRole               = Spatie\Permission\Models\Role::findOrCreate('pastor');
     $secretaryRole            = Spatie\Permission\Models\Role::findOrCreate('secretary');
-    $adminRole                = Spatie\Permission\Models\Role::findOrCreate('admin');
+    $adminRole                = Spatie\Permission\Models\Role::findOrCreate('Super Admin');
     $createMembersPermission  = Spatie\Permission\Models\Permission::findOrCreate('create members');
     $editMembersPermission    = Spatie\Permission\Models\Permission::findOrCreate('edit members');
     $deleteMembersPermission  = Spatie\Permission\Models\Permission::findOrCreate('delete members');
@@ -90,6 +90,6 @@ it('should not permit a secretary to edit members', function () {
 
 it('should permit an admin to edit members', function () {
     $user = App\Models\User::factory()->create();
-    $user->assignRole('admin');
+    $user->assignRole('Super Admin');
     expect($user->can('edit members'))->toBeTrue();
 });
