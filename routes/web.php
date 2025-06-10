@@ -4,4 +4,9 @@ declare(strict_types=1);
 
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', fn() => view('welcome'));
+
+Route::get('/', function () {
+    return inertia('Test', [
+        'message' => 'Hello, Inertia!',
+    ]);
+})->name('test');
