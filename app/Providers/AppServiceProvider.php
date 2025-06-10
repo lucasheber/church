@@ -29,8 +29,6 @@ class AppServiceProvider extends ServiceProvider
 
     private function registerSpatiePermissionGates(): void
     {
-        Gate::before(function (User $user) {
-            return $user->hasRole('Super Admin');
-        });
+        Gate::before(fn(User $user): bool => $user->hasRole('Super Admin'));
     }
 }

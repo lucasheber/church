@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-beforeEach(function () {
+beforeEach(function (): void {
     // Ensure the Spatie Permission package is set up correctly
     $pastorRole               = Spatie\Permission\Models\Role::findOrCreate('pastor');
     $secretaryRole            = Spatie\Permission\Models\Role::findOrCreate('secretary');
@@ -21,7 +21,7 @@ beforeEach(function () {
 
 });
 
-it('create a role and permission', function () {
+it('create a role and permission', function (): void {
     $this->pastorRole            = Spatie\Permission\Models\Role::findOrCreate('pastor');
     $this->editMembersPermission = Spatie\Permission\Models\Permission::findOrCreate('edit members');
     $this->pastorRole->givePermissionTo($this->editMembersPermission);
@@ -33,20 +33,20 @@ it('create a role and permission', function () {
     expect($this->editMembersPermission->name)->toBe('edit members');
 });
 
-it('assign a role to a user', function () {
+it('assign a role to a user', function (): void {
     $user = App\Models\User::factory()->create();
 
     $user->assignRole('pastor');
     expect($user->hasRole('pastor'))->toBeTrue();
 });
 
-it('not assign a role to a user if the role does not exist', function () {
+it('not assign a role to a user if the role does not exist', function (): void {
     $user = App\Models\User::factory()->create();
 
     expect(fn () => $user->assignRole('nonexistent_role'))->toThrow(Spatie\Permission\Exceptions\RoleDoesNotExist::class);
 });
 
-it('validate if a user has a role', function () {
+it('validate if a user has a role', function (): void {
     $user = App\Models\User::factory()->create();
     $user->assignRole('pastor');
 
@@ -54,13 +54,13 @@ it('validate if a user has a role', function () {
     expect($user->hasRole('secretary'))->toBeFalse();
 });
 
-it('validate if a user does not have a role', function () {
+it('validate if a user does not have a role', function (): void {
     $user = App\Models\User::factory()->create();
 
     expect($user->hasRole('pastor'))->toBeFalse();
 });
 
-it('assign multiple roles to a user', function () {
+it('assign multiple roles to a user', function (): void {
     $user = App\Models\User::factory()->create();
 
     $user->assignRole(['pastor', 'secretary']);
@@ -70,25 +70,25 @@ it('assign multiple roles to a user', function () {
     expect($user->getRoleNames()->toArray())->toContain('secretary');
 });
 
-it('should not permit a secretary to create members', function () {
+it('should not permit a secretary to create members', function (): void {
     $user = App\Models\User::factory()->create();
     $user->assignRole('secretary');
     expect($user->can('create members'))->toBeFalse();
 });
 
-it('should permit a pastor to create members', function () {
+it('should permit a pastor to create members', function (): void {
     $user = App\Models\User::factory()->create();
     $user->assignRole('pastor');
     expect($user->can('create members'))->toBeTrue();
 });
 
-it('should not permit a secretary to edit members', function () {
+it('should not permit a secretary to edit members', function (): void {
     $user = App\Models\User::factory()->create();
     $user->assignRole('secretary');
     expect($user->can('edit members'))->toBeFalse();
 });
 
-it('should permit an admin to edit members', function () {
+it('should permit an admin to edit members', function (): void {
     $user = App\Models\User::factory()->create();
     $user->assignRole('Super Admin');
     expect($user->can('edit members'))->toBeTrue();
