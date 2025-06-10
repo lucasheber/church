@@ -1,0 +1,11 @@
+includes:
+    
+
+parameters:
+    ignoreErrors:
+      
+
+    paths:
+        - app/
+
+    level: 6
