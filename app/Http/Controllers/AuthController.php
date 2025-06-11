@@ -42,4 +42,50 @@ class AuthController extends Controller
 
         return redirect()->route('login')->with('success', 'You have been logged out successfully.');
     }
+
+    public function register(): \Inertia\Response
+    {
+        return Inertia::render('Auth/Register');
+    }
+
+    public function registerPost(Request $request): RedirectResponse
+    {
+        // Validate the registration data
+        $request->validate([
+            'name'     => 'required|string|max:255',
+            'email'    => 'required|email|unique:users,email',
+            'password' => 'required|string|min:8|confirmed',
+        ]);
+
+        // Create the user
+        $user = \App\Models\User::create([
+            'name'     => $request->input('name'),
+            'email'    => $request->input('email'),
+            'password' => bcrypt($request->input('password')),
+        ]);
+
+        // Automatically log in the user after registration
+        Auth::login($user);
+
+        return redirect()->route('dashboard.index')->with('success', 'Registration successful!');
+    }
+
+    public function forgotPassword(): \Inertia\Response
+    {
+        return Inertia::render('Auth/ForgotPassword');
+    }
+
+    public function forgotPasswordPost(Request $request): RedirectResponse
+    {
+        // Validate the email
+        $request->validate([
+            'email' => 'required|email',
+        ]);
+
+        // Here you would typically send a password reset link to the user's email
+        // For example:
+        // Password::sendResetLink($request->only('email'));
+
+        return redirect()->route('login')->with('success', 'Password reset link sent to your email.');
+    }
 }
