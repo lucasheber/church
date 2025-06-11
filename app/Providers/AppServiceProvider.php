@@ -34,17 +34,13 @@ class AppServiceProvider extends ServiceProvider
 
     private function registerSpatiePermissionGates(): void
     {
-        Gate::before(fn(User $user): bool => $user->hasRole('Super Admin'));
+        Gate::before(fn (User $user): bool => $user->hasRole('Super Admin'));
     }
 
     private function rateLimitWebRoutes(): void
     {
-        RateLimiter::for('auth-limit', function (Request $request) {
-            return Limit::perMinute(config('auth.rate_limits.login.max_attempts'), config('auth.rate_limits.login.decay_minutes'))
-                ->by($request->ip())
-                ->response(function (Request $request, array $headers) {
-                    return response('Too many login attempts. Please try again later.', Response::HTTP_TOO_MANY_REQUESTS, $headers);
-                });
-        });
+        RateLimiter::for('auth-limit', fn (Request $request) => Limit::perMinute(config('auth.rate_limits.login.max_attempts'), config('auth.rate_limits.login.decay_minutes'))
+            ->by($request->ip())
+            ->response(fn (Request $request, array $headers) => response('Too many login attempts. Please try again later.', Response::HTTP_TOO_MANY_REQUESTS, $headers)));
     }
 }

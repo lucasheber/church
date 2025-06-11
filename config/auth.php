@@ -124,14 +124,14 @@ return [
     | specified time period. This helps to prevent abuse and brute-force
     | attacks on your authentication system.
     |--------------------------------------------------------------------------
-    */  
+    */
     'rate_limits' => [
         'login' => [
-            'max_attempts' => env('AUTH_LOGIN_MAX_ATTEMPTS', 15),
+            'max_attempts'  => env('AUTH_LOGIN_MAX_ATTEMPTS', 15),
             'decay_minutes' => env('AUTH_LOGIN_DECAY_MINUTES', 1),
         ],
         'password_reset' => [
-            'max_attempts' => env('AUTH_PASSWORD_RESET_MAX_ATTEMPTS', 3),
+            'max_attempts'  => env('AUTH_PASSWORD_RESET_MAX_ATTEMPTS', 3),
             'decay_minutes' => env('AUTH_PASSWORD_RESET_DECAY_MINUTES', 15),
         ],
     ],

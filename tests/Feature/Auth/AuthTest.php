@@ -63,9 +63,9 @@ it('can access the registration page', function (): void {
 
 it('can register a new user', function (): void {
     $response = $this->post(route('register.post'), [
-        'name'     => 'Test User',
-        'email'    => 'test@example.com',
-        'password' => 'password',
+        'name'                  => 'Test User',
+        'email'                 => 'test@example.com',
+        'password'              => 'password',
         'password_confirmation' => 'password',
     ]);
 
@@ -77,9 +77,9 @@ it('cannot register with existing email', function (): void {
     App\Models\User::factory()->create(['email' => 'test@example.com']);
 
     $response = $this->post(route('register.post'), [
-        'name'     => 'Test User',
-        'email'    => 'test@example.com',
-        'password' => 'password',
+        'name'                  => 'Test User',
+        'email'                 => 'test@example.com',
+        'password'              => 'password',
         'password_confirmation' => 'password',
     ]);
 
@@ -88,9 +88,9 @@ it('cannot register with existing email', function (): void {
 
 it('cannot register with invalid password', function (): void {
     $response = $this->post(route('register.post'), [
-        'name'     => 'Test User',
-        'email'    => 'test@example.com',
-        'password' => 'short',
+        'name'                  => 'Test User',
+        'email'                 => 'test@example.com',
+        'password'              => 'short',
         'password_confirmation' => 'short',
     ]);
 
