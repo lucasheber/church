@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useForm } from '@inertiajs/vue3';
+import { route } from 'ziggy-js';
 
 const props = defineProps({});
 
@@ -14,7 +15,7 @@ const form = useForm({
     }
 });
 const submit = () => {
-    form.post(route('login'), {
+    form.post(route('login.post'), {
         onSuccess: () => {
             form.reset();
         }
@@ -31,7 +32,7 @@ const submit = () => {
                     <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
                     <input v-model="form.email" type="email" id="email" name="email" required
                         class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-                
+
                     <div class="mt-1 text-sm text-red-500">
                         {{ form.errors.email ? form.errors.email : '' }}
                     </div>
@@ -40,7 +41,7 @@ const submit = () => {
                     <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
                     <input v-model="form.password" type="password" id="password" name="password" required
                         class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-                
+
                     <div class="mt-1 text-sm text-red-500">
                         {{ form.errors.password ? form.errors.password : '' }}
                     </div>
@@ -55,10 +56,12 @@ const submit = () => {
                     Login
                 </button>
                 <div class="mt-4 text-sm text-center">
-                    <a href="{{ route('register') }}" class="text-blue-600 hover:text-blue-500">Don't have an account? Register</a>
+                    <a :href="route('register')" class="text-blue-600 hover:text-blue-500">Don't have an account?
+                        Register</a>
                 </div>
                 <div class="mt-2 text-sm text-center">
-                    <a href="{{ route('forgot-password') }}" class="text-blue-600 hover:text-blue-500">Forgot your password?</a>
+                    <a :href="route('forgot-password')" class="text-blue-600 hover:text-blue-500">Forgot your
+                        password?</a>
                 </div>
             </form>
             <div v-if="form.errors.message" class="mt-4 text-red-600">
