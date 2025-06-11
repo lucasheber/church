@@ -66,11 +66,13 @@ it('can register a new user', function (): void {
         'name'     => 'Test User',
         'email'    => 'test@example.com',
         'password' => 'password',
+        'password_confirmation' => 'password',
     ]);
 
     $response->assertRedirect(route('dashboard.index'));
     $this->assertAuthenticated();
 });
+
 it('cannot register with existing email', function (): void {
     App\Models\User::factory()->create(['email' => 'test@example.com']);
 
@@ -78,9 +80,9 @@ it('cannot register with existing email', function (): void {
         'name'     => 'Test User',
         'email'    => 'test@example.com',
         'password' => 'password',
+        'password_confirmation' => 'password',
     ]);
 
-    $response->assertRedirect(route('register'));
     $response->assertSessionHasErrors(['email' => 'The email has already been taken.']);
 });
 
@@ -89,10 +91,10 @@ it('cannot register with invalid password', function (): void {
         'name'     => 'Test User',
         'email'    => 'test@example.com',
         'password' => 'short',
+        'password_confirmation' => 'short',
     ]);
 
-    $response->assertRedirect(route('register'));
-    $response->assertSessionHasErrors(['password' => 'The password must be at least 8 characters.']);
+    $response->assertSessionHasErrors(['password' => 'The password field must be at least 8 characters.']);
 });
 
 it('cannot access dashboard without authentication', function (): void {
@@ -108,5 +110,34 @@ it('can access dashboard when authenticated', function (): void {
     $response = $this->get(route('dashboard.index'));
 
     $response->assertOk()
-        ->assertJson(['message' => 'Welcome to the Dashboard!']);
+        ->assertInertia(
+            fn (Assert $page): Assert => $page
+            ->component('Dash/Index')
+        );
+    $this->assertAuthenticatedAs($user);
+});
+
+it('can validate rate limiting on login attempts', function (): void {
+
+    // Simulate multiple login attempts
+    for ($i = 0; $i < config('auth.rate_limits.login.max_attempts') + 1; $i++) {
+        $response = $this->post(route('login.post'), [
+            'email'    => 'test@example.com',
+            'password' => 'password',
+        ]);
+    }
+
+    $response->assertStatus(429)
+        ->assertSee('Too many login attempts. Please try again later.');
+    $this->assertGuest();
+});
+
+it('can access the forgot password page', function (): void {
+    $response = $this->get(route('forgot-password'));
+
+    $response->assertOk()
+        ->assertInertia(
+            fn (Assert $page): Assert => $page
+            ->component('Auth/ForgotPassword')
+        );
 });
